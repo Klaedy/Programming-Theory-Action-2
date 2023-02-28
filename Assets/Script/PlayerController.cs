@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
 
     //LANZAMIENTO
     private float stayBack = 2.0f;
-    private bool kiteoBool = false; //Aleja al jugador e inicia el arranque del rocket
+    public bool kiteoBool = false; //Aleja al jugador e inicia el arranque del rocket
     private bool isRocketPlanted = false;
     private float kiteoTimer = 2.0f; //Cuenta atrás del lanzamiento
     private float kiteoTimerMax = 2.0f; //Referencia que restaura kiteoTimer tras ser usado
@@ -75,10 +75,8 @@ public class PlayerController : MonoBehaviour
             Vector2 rocketPosition = new Vector2(transform.position.x, 0);
             Instantiate(basicRocketPrefab, rocketPosition, basicRocketPrefab.transform.rotation);
             gameManagerScript.BasicRocketUpdate(-1);
-            Debug.Log("que explotooooo");
             StartCoroutine(Fixing());
         }
-        Debug.Log("Player entró en el área del trigger.");
     }
 
     IEnumerator Fixing()
