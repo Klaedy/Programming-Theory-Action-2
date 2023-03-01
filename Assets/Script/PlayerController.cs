@@ -170,4 +170,15 @@ public class PlayerController : MonoBehaviour
         else
             solarTileset.SetActive(true);
     }
+
+    public void CancelControl()
+    {
+        dontMove = true;
+    }
+
+    public void PermitControl()
+    {
+        dontMove = false;
+    }
+
 }
