@@ -71,10 +71,11 @@ namespace NodeEditorFramework.Standard
 			EditorLoadingControl.justLeftPlayMode += NormalReInit;
 			EditorLoadingControl.justOpenedNewScene -= NormalReInit;
 			EditorLoadingControl.justOpenedNewScene += NormalReInit;
+#pragma warning disable 618
 			SceneView.onSceneGUIDelegate -= OnSceneGUI;
 			SceneView.onSceneGUIDelegate += OnSceneGUI;
-
-            EditorApplication.LockReloadAssemblies();
+#pragma warning restore 618
+			EditorApplication.LockReloadAssemblies();
         }
 
         void OnDisable()
@@ -88,8 +89,9 @@ namespace NodeEditorFramework.Standard
 			NodeEditor.ClientRepaints -= Repaint;
 			EditorLoadingControl.justLeftPlayMode -= NormalReInit;
 			EditorLoadingControl.justOpenedNewScene -= NormalReInit;
+#pragma warning disable 618 
 			SceneView.onSceneGUIDelegate -= OnSceneGUI;
-
+#pragma warning restore 618
 			// Clear Cache
 			canvasCache.ClearCacheEvents();
 		}

@@ -5,6 +5,7 @@ using UnityEngine;
 public class BasicRocket : MonoBehaviour
 {
     private PlayerController playerScript;
+    private StoryManager storyManagerScript;
     public Rigidbody2D rocketRb;
     public Collider2D rocketCollider2D;
     protected float speed = 500.0f;
@@ -13,6 +14,7 @@ public class BasicRocket : MonoBehaviour
     void Awake()
     {
         playerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+        storyManagerScript = GameObject.Find("StoryManager").GetComponent<StoryManager>();
         rocketRb = GetComponent<Rigidbody2D>();
         rocketCollider2D = GetComponent<Collider2D>();
     }
@@ -35,7 +37,9 @@ public class BasicRocket : MonoBehaviour
         if (collision.gameObject.tag == "Lanzadera" && isFlying == true)
         {
             Debug.Log("booom");
-            Destroy(gameObject);
+            Destroy(gameObject);           
+            storyManagerScript.storyStarted = true;
+            storyManagerScript.instalable = false;
         }
     }
 

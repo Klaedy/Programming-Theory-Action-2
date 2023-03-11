@@ -11,7 +11,7 @@ public class MarketNPC : MonoBehaviour
     void Start()
     {
         gameManagerScript = GameObject.Find("GameManager").GetComponent<GameManager>();
-        scriptLine = 0;    
+        //scriptLine = 0;    
     }
 
     // Update is called once per frame
@@ -20,27 +20,9 @@ public class MarketNPC : MonoBehaviour
         
     }
 
-    public void Dialog()
+    public void EntregaPropulsor()
     {
-        if (scriptLine == 0)
-        {
-            Debug.Log("Te hace entrega del cohete");
-            gameManagerScript.BasicRocketUpdate(1);
-            scriptLine++;
-
-            return;
-        }
-
-        if (scriptLine == 1)
-        {
-            Debug.Log("Esto es el segundo mensaje");
-            scriptLine++;
-            return;
-        }
-
-        if (scriptLine == 2)
-        {
-            Debug.Log("Esto es el tercer mensaje");
-        }
+        gameManagerScript.BasicRocketUpdate(1);
+        Debug.Log("Propulsor añadido");
     }
 }

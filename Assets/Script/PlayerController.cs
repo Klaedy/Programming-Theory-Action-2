@@ -4,18 +4,28 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private Rigidbody2D playerRb;
+    public Rigidbody2D playerRb;
     private GameManager gameManagerScript;
+    private StoryManager storyManagerScript;
     private BasicRocket basicRocketScript;
     private MarketNPC marketNPCScript;
     public GameObject basicRocketPrefab;
+    public GameObject coheteJuguetePrefab;
+    public GameObject directionalRocketPrefab;
+    public GameObject coheteCuanticoPrefab;
+    public GameObject satelitesOn;
+    private GameObject satelitesTrigger;
     
     private float speed = 15.0f;
     private float horizontalInput;
+    private float verticalInput;
     Vector2 lookDirection = new Vector2(1, 0); //Las cosas a la cara!!!
     private Vector2 backDirection; //Las cosas a la espalda!!
+    public Vector2 LookDirection { get { return lookDirection; } set { lookDirection = value; } }
     public bool dontMove = false; //Arrebata el control del personaje al jugador
-    
+    private GameObject escalerasTrigger;
+    public bool addMoveY = false; //Controla si el jugador está o no en una escalera
+    private Vector2 previousVelocity = Vector2.zero;
 
     //LANZAMIENTO
     private float stayBack = 2.0f;
@@ -23,7 +33,13 @@ public class PlayerController : MonoBehaviour
     private bool isRocketPlanted = false;
     private float kiteoTimer = 2.0f; //Cuenta atrás del lanzamiento
     private float kiteoTimerMax = 2.0f; //Referencia que restaura kiteoTimer tras ser usado
-    
+    public bool safeDelay = false; //Previene activar el lanzamiento mediante missclick//puedo usarlo sin miedo ya que se desactiva automáticamente tras Lanzamiento()
+    private int isFirstTimeAzoteaPrivate; //Creará texto intermitente en la azotea explicando cómo lanzar cohete//el trigger está en SatelitesTrigger
+    public int isFirstTimeAzoteaPublic //ENCAPSULAMIENTO example
+    {
+        get { return isFirstTimeAzoteaPrivate; }
+        set { isFirstTimeAzoteaPrivate = value; }
+    }
 
     //HANGAR ON / OFF
     private GameObject solarTileset;
@@ -34,23 +50,29 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
         playerRb = GetComponent<Rigidbody2D>();
         kiteoTimerMax = 2.0f;
         gameManagerScript = GameObject.Find("GameManager").GetComponent<GameManager>();
+        storyManagerScript = GameObject.Find("StoryManager").GetComponent<StoryManager>();
         marketNPCScript = GameObject.Find("Trader").GetComponent<MarketNPC>();
         solarTileset = GameObject.Find("Solar");
-        solarTriggerOn = GameObject.Find("TriggerHangarOn");
-        solarTriggerOff = GameObject.Find("TriggerHangarOff");
+        solarTriggerOn = GameObject.Find("Colliders/TriggerHangarOn");
+        solarTriggerOff = GameObject.Find("Colliders/TriggerHangarOff");
+        escalerasTrigger = GameObject.Find("Triggers/EjeYEscalera");
+        
+        satelitesTrigger = GameObject.Find("Triggers/SatelitesTrigger");
         Application.targetFrameRate = 60;
+        isFirstTimeAzoteaPrivate = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {          
-            StartTalk();
-        }
+       // if (Input.GetKeyDown(KeyCode.Space))
+       // {          
+       //     StartTalk();
+       // }
 
         if (Input.GetKeyDown(KeyCode.Space) && isRocketPlanted == true)
         {
@@ -60,7 +82,7 @@ public class PlayerController : MonoBehaviour
         if (kiteoBool == true)
         {
             CountDown();
-        }
+        } 
     }
 
     private void FixedUpdate()
@@ -70,12 +92,39 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (gameManagerScript.basicRocket >= 1 && collision.GetComponent<Collider2D>().tag == "Lanzadera" && Input.GetKeyDown(KeyCode.Space))
+        if (gameManagerScript.basicRocket >= 1 && collision.GetComponent<Collider2D>().tag == "Lanzadera" && Input.GetKeyDown(KeyCode.Space) && storyManagerScript.instalable == true)
         {
             Vector2 rocketPosition = new Vector2(transform.position.x, 0);
             Instantiate(basicRocketPrefab, rocketPosition, basicRocketPrefab.transform.rotation);
             gameManagerScript.BasicRocketUpdate(-1);
             StartCoroutine(Fixing());
+            
+        }
+
+        if (gameManagerScript.coheteJuguete >= 1 && collision.GetComponent<Collider2D>().tag == "Lanzadera" && Input.GetKeyDown(KeyCode.Space) && storyManagerScript.instalable2 == true)
+        {
+            Vector2 rocket2Position = new Vector2(transform.position.x, 0);
+            Instantiate(coheteJuguetePrefab, rocket2Position, coheteJuguetePrefab.transform.rotation);
+            gameManagerScript.CoheteJugueteUpdate(-1);
+            StartCoroutine(Fixing2());
+        }
+       
+        if (gameManagerScript.directionalRocket >= 1 && collision.GetComponent<Collider2D>().tag == "Lanzadera2" && Input.GetKeyDown(KeyCode.Space))
+        {
+            Vector2 rocket3Position = new Vector2(transform.position.x, 20.4f);
+            Instantiate(directionalRocketPrefab, rocket3Position, directionalRocketPrefab.transform.rotation);
+            gameManagerScript.DirectionalRocketUpdate(-1);
+            storyManagerScript.DetenerTextoIntermitente2();
+            StartCoroutine(Fixing2());
+        }
+
+        if (gameManagerScript.coheteCuantico >= 1 && collision.GetComponent<Collider2D>().tag == "Lanzadera2" && Input.GetKeyDown(KeyCode.Space))
+        {
+            Vector2 rocket3Position = new Vector2(transform.position.x, 20.4f);
+            Instantiate(coheteCuanticoPrefab, rocket3Position, coheteCuanticoPrefab.transform.rotation);
+            gameManagerScript.CoheteCuanticoUpdate(-1);
+            //storyManagerScript.DetenerTextoIntermitente2();
+            StartCoroutine(Fixing2());
         }
     }
 
@@ -85,12 +134,24 @@ public class PlayerController : MonoBehaviour
         isRocketPlanted = true;
     }
 
+    IEnumerator Fixing2() //REUTILIZABLE//safeDelay automatizado//
+    {
+        yield return new WaitForSeconds(0.5f);
+        safeDelay = true;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-       
-       
-
-        //HANGAR
+          //MOVIMIENTO EJE Y
+        if (collision.gameObject == escalerasTrigger)
+        {
+            addMoveY = true;
+            previousVelocity = playerRb.velocity;
+            playerRb.velocity = new Vector2(previousVelocity.x, 0f);
+            playerRb.gravityScale = 0; // Desactiva la gravedad
+            satelitesOn.SetActive(false);
+        }
+          //HANGAR
         if (collision.gameObject == solarTriggerOn)
         {
             isInteriorOn = true;
@@ -100,15 +161,43 @@ public class PlayerController : MonoBehaviour
         {
             isInteriorOn = false;
         }
+
+        if (collision.gameObject == satelitesTrigger && isFirstTimeAzoteaPrivate == 0)
+        {
+            storyManagerScript.InstalarCohete2();
+        }
+
         HangarVisible();
         //HANGAR
+
+        //Mondongos//
+        if (collision.CompareTag("Trigger") && gameManagerScript.mondongoCount == 0)
+        {
+            storyManagerScript.Mondongo2();
+        }
+        if (collision.CompareTag("Trigger") && gameManagerScript.mondongoCount == 1)
+        {
+            storyManagerScript.Mondongo3();
+        }
     }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject == escalerasTrigger)
+        {
+            addMoveY = false;
+            playerRb.velocity = previousVelocity;
+            playerRb.gravityScale = 1; // Desactiva la gravedad
+        }
+    }
+
+
 
     void PrenderLaMecha()
     {
         RaycastHit2D hit = Physics2D.Raycast(playerRb.position + Vector2.up * 0.2f, lookDirection, 2.5f, LayerMask.GetMask("Rocket"));
         if (hit.collider != null)
-        {
+        {           
             kiteoBool = true;
             dontMove = true;
         }
@@ -116,6 +205,7 @@ public class PlayerController : MonoBehaviour
 
     void CountDown()
     {
+        storyManagerScript.DetenerTextoIntermitente();
         transform.Translate(backDirection * stayBack * Time.deltaTime);
         basicRocketScript = GameObject.Find("BasicRocket(Clone)").GetComponent<BasicRocket>();
         kiteoTimer -= Time.deltaTime;
@@ -125,14 +215,14 @@ public class PlayerController : MonoBehaviour
             basicRocketScript.rocketCollider2D.isTrigger = false;
             basicRocketScript.RocketLaunch();
             kiteoBool = false;
-            dontMove = false;
+            //dontMove = false;
             kiteoTimer = kiteoTimerMax;
         }
     }
 
     void Movilidad()
     {
-        if (dontMove == false)
+        if (dontMove == false && addMoveY == false)
         {
             //Vector2 position = playerRb.position;
             horizontalInput = Input.GetAxis("Horizontal");
@@ -140,7 +230,21 @@ public class PlayerController : MonoBehaviour
             //playerRb.MovePosition(position);
             playerRb.velocity = new Vector2(horizontalInput * speed, playerRb.velocity.y);
         }
-        
+
+        else if (dontMove == false && addMoveY == true)
+        {
+            horizontalInput = Input.GetAxis("Horizontal");
+            verticalInput = Input.GetAxis("Vertical");
+            playerRb.velocity = new Vector2(horizontalInput * speed, verticalInput * speed);
+            if (transform.position.y > 18)
+            {
+                Vector2 newPosition = transform.position;
+                newPosition.y = 18;
+                transform.position = newPosition;
+            }
+        }
+
+
         if (!Mathf.Approximately(horizontalInput, 0.0f))
         {
             lookDirection = new Vector2(horizontalInput, 0f).normalized;
@@ -148,18 +252,18 @@ public class PlayerController : MonoBehaviour
         backDirection = -lookDirection.normalized;
     }
 
-    void StartTalk()
-    {
-        RaycastHit2D hit = Physics2D.Raycast(playerRb.position + Vector2.up * 0.2f, lookDirection, 1.5f, LayerMask.GetMask("NPC"));
-        if (hit.collider != null)
-        {
+    //void StartTalk()
+    //{
+      //  RaycastHit2D hit = Physics2D.Raycast(playerRb.position + Vector2.up * 0.2f, lookDirection, 1.5f, LayerMask.GetMask("NPC"));
+        //if (hit.collider != null)
+        //{
             //Conversación con el trader
-           if (marketNPCScript != null)
-            {
-                marketNPCScript.Dialog();
-            }
-        }
-    }
+          // if (marketNPCScript != null)
+            //{
+              //  marketNPCScript.Dialog();
+            //}
+        //}
+    //}
     
     void HangarVisible()
     {
@@ -174,6 +278,7 @@ public class PlayerController : MonoBehaviour
     public void CancelControl()
     {
         dontMove = true;
+        playerRb.velocity = Vector2.zero;
     }
 
     public void PermitControl()
@@ -181,4 +286,20 @@ public class PlayerController : MonoBehaviour
         dontMove = false;
     }
 
+    public void StaySafe()
+    {
+        dontMove = true;
+        transform.Translate(backDirection * stayBack * Time.deltaTime);
+    }
+
+    //Con esta función puedo declarar hacia qué dirección mira el player en cualquier otro script
+    public Vector2 GetPlayerPosition()
+    {
+        return playerRb.position;
+    }
+
+    public Vector2 GetLookDirection()
+    {
+        return LookDirection;
+    }
 }
