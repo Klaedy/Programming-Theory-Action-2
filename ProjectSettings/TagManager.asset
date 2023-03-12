@@ -8,6 +8,8 @@ TagManager:
   - Lanzadera
   - Trigger
   - Lanzadera2
+  - Radar
+  - Coin
   layers:
   - Default
   - TransparentFX

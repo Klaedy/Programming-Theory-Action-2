@@ -20,8 +20,8 @@ public class GameManager : MonoBehaviour
         coheteJuguete = 0;
         mondongoCount = 0;
         llaveAzoteaCount = 0;
-        directionalRocket = 0;
-        coheteCuantico = 1; //PONLO A 0 CABRÓN!!!!!!!!!!
+        directionalRocket = 1;
+        coheteCuantico = 0; //PONLO A 0 CABRÓN!!!!!!!!!!
     }
 
     // Update is called once per frame

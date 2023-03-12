@@ -60,6 +60,12 @@ public class DirectionalRocket : CoheteSimple
             Destroy(gameObject);
             //TROZO DE CÓDIGO INDESTRUCTIBLE para cualquier clase           
         }
+
+        if (collision.collider.CompareTag("Radar"))
+        {
+            Destroy(collision.gameObject);
+            Destroy(gameObject);
+        }
     }
 
     public void AsignarRigidBody2D()
