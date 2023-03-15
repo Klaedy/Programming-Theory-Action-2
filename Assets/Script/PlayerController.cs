@@ -225,6 +225,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Chip"))
+        {
+            gameManagerScript.ChipUpdate(1);
+            Destroy(collision.gameObject);
+        }
+    }
+
 
 
     void PrenderLaMecha()

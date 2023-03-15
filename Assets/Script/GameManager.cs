@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     public int mondongoCount;
     public int llaveAzoteaCount;
     public int coheteCuantico;
+    public int chipCount;
 
     //SEMAFORO
     public GameObject greenLight;
@@ -23,12 +24,13 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+        chipCount = 0;
         basicRocket = 0;
         coheteJuguete = 0;
         mondongoCount = 0;
         llaveAzoteaCount = 0;
-        directionalRocket = 0;
-        coheteCuantico = 1; //PONLO A 0 CABRÓN!!!!!!!!!!
+        directionalRocket = 1;
+        coheteCuantico = 0; //PONLO A 0 CABRÓN!!!!!!!!!!
 
         StartCoroutine(Semaforo());
     }
@@ -88,6 +90,11 @@ public class GameManager : MonoBehaviour
     public void Got1CoheteCuantico()
     {
         CoheteCuanticoUpdate(1);
+    }
+
+    public void ChipUpdate(int _chipToAdd)
+    {
+        chipCount += _chipToAdd;
     }
 
     public void Got1RocketJuguete()

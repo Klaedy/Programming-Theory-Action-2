@@ -5,8 +5,8 @@ using Cinemachine;
 
 public class CoheteCuantico : CoheteSimple
 {
-    public float upForce = 600.0f;
-    public float directionalForce = 50.0f;
+    public float upForce = 400.0f;
+    public float directionalForce = 20.0f;
     public float teleport = 5.0f;
     private bool rbAssigned = false;
     private Rigidbody2D rocketRb;

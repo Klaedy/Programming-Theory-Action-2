@@ -199,6 +199,7 @@ MonoBehaviour:
   lightParticleRight: {fileID: 6361577538042350499}
   smokePlatform: {fileID: 3567228105053216543}
   explosionPrefab: {fileID: 5689088070000346081, guid: ee5eb5f4c32c88340a74f38cdfea876f, type: 3}
+  chipPrefab: {fileID: 3288684888076606067, guid: 1c5c57cb0fab4ea4fb244061162d51f5, type: 3}
   turboClip: {fileID: 8300000, guid: f4bc560074b26e2458444152389d1a83, type: 3}
   explosionClip: {fileID: 8300000, guid: d23535873e7ee4b4d94580865560c007, type: 3}
 --- !u!82 &5261422143836046262

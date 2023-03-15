@@ -20,6 +20,7 @@ public class DirectionalRocket : CoheteSimple
     public GameObject lightParticleRight;
     public GameObject smokePlatform;
     public GameObject explosionPrefab;
+    public GameObject chipPrefab;
     public AudioClip turboClip;
     public AudioClip explosionClip;
     private AudioSource audioSourceBase;
@@ -174,6 +175,7 @@ public class DirectionalRocket : CoheteSimple
             isLaunched = false;
             AudioSource.PlayClipAtPoint(explosionClip, transform.position, 1f);
             MoreRockets();
+            GenerateChips(); //Instancia 3 chips
             Instantiate(explosionPrefab, whereAmI, explosionPrefab.transform.rotation);
             playerControllerScript.bringBackTheControlDude = true;
             Destroy(collision.gameObject);
@@ -247,5 +249,12 @@ public class DirectionalRocket : CoheteSimple
         antiRocket1.enabled = false;
         lanzadera2.enabled = true;
         antiRocket2.enabled = false;
+    }
+
+    public void GenerateChips()
+    {
+        Instantiate(chipPrefab, whereAmI, chipPrefab.transform.rotation);
+        Instantiate(chipPrefab, whereAmI, chipPrefab.transform.rotation);
+        Instantiate(chipPrefab, whereAmI, chipPrefab.transform.rotation);
     }
 }
