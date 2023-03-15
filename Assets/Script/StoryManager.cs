@@ -10,6 +10,7 @@ public class StoryManager : MonoBehaviour
     private GameManager gameManagerScript;
     public TextMeshProUGUI installPropulsorText;
     public TextMeshProUGUI installAzoteaText;
+    public TextMeshProUGUI installAzoteaText3;
     public bool storyStarted = false;
     public bool gotCraneo = false;   
 
@@ -17,6 +18,9 @@ public class StoryManager : MonoBehaviour
     private GameObject triggerBasura;
     public GameObject lanzadera;
     public GameObject triggerPideLlaves;
+    public GameObject lootDirectionalRocket; //Puedo lootear un directional Rocket de la estantería
+    public GameObject noLootDirectionalRocket; //No puedo lootearlo
+    public bool canILoot = false;
     public bool instalable = false; //Crea un delay entre la caja de texto Mondongo2 y la instalación del cohete
     public bool instalable2 = false; //lo mismo para Cohete-Juguete
     public float instalableDelay = 0;
@@ -39,6 +43,7 @@ public class StoryManager : MonoBehaviour
     //FUNCIONALIDADES
     private Coroutine textoIntermitenteCoroutine;
     private Coroutine textoIntermitenteCoroutine2;
+    private Coroutine textoIntermitenteCoroutine3;
 
     // Start is called before the first frame update
     void Start()
@@ -54,7 +59,8 @@ public class StoryManager : MonoBehaviour
     {
        if (storyStarted == true)
         {
-            StoryStarted();
+            StartCoroutine(PauseAfterExplosion());
+            storyStarted = false;
         }
 
        if (alreadyExplotedCoheteJuguete == true)
@@ -67,6 +73,13 @@ public class StoryManager : MonoBehaviour
             TrinoTalk4();
             gameManagerScript.Got1KeyAzotea();
         }
+
+       //Poder o no lootear Directional Rocket de la estantería
+        if (gameManagerScript.directionalRocket == 0 && canILoot == true)
+            CanLoot();
+
+       if (gameManagerScript.directionalRocket == 1 && canILoot == true)        
+            CantLoot();       
     }
 
     public void TriggerBasuraON()
@@ -111,6 +124,19 @@ public class StoryManager : MonoBehaviour
         }
     }
 
+    IEnumerator TextoIntermitente3()
+    {
+        float tiempoEncendido3 = 2f;
+        float tiempoApagado3 = 0.5f;
+        while(true)
+        {
+            installAzoteaText3.gameObject.SetActive(true);
+            yield return new WaitForSeconds(tiempoEncendido3);
+            installAzoteaText3.gameObject.SetActive(false);
+            yield return new WaitForSeconds(tiempoApagado3);
+        }
+    }
+
     IEnumerator LanzaderaON()
     {
         yield return new WaitForSeconds(1);
@@ -145,6 +171,11 @@ public class StoryManager : MonoBehaviour
         textoIntermitenteCoroutine2 = StartCoroutine(TextoIntermitente2());
     }
 
+    public void InstalarCohete3()
+    {
+        textoIntermitenteCoroutine3 = StartCoroutine(TextoIntermitente3());
+    }
+
     public void DetenerTextoIntermitente()
     {
         if (textoIntermitenteCoroutine != null)
@@ -152,6 +183,16 @@ public class StoryManager : MonoBehaviour
             StopCoroutine(textoIntermitenteCoroutine);
             textoIntermitenteCoroutine = null;
             installPropulsorText.gameObject.SetActive(false);
+        }
+    }
+
+    public void DetenerTextoIntermitente3()
+    {
+        if (textoIntermitenteCoroutine3 != null)
+        {
+            StopCoroutine(textoIntermitenteCoroutine3);
+            textoIntermitenteCoroutine3 = null;
+            installAzoteaText3.gameObject.SetActive(false);
         }
     }
 
@@ -188,5 +229,26 @@ public class StoryManager : MonoBehaviour
     {
         trinoTalk4.SetActive(true);
     }
-  
+
+    public IEnumerator PauseAfterExplosion()
+    {
+        yield return new WaitForSeconds(1);
+        StoryStarted();
+    }
+
+    public void TriggerDirectionalLootOn()
+    {
+        canILoot = true;
+    }
+    public void CanLoot()
+    {
+        lootDirectionalRocket.SetActive(true);
+        noLootDirectionalRocket.SetActive(false);
+    }
+
+    public void CantLoot()
+    {
+        lootDirectionalRocket.SetActive(false);
+        noLootDirectionalRocket.SetActive(true);
+    }
 }

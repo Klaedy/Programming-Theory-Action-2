@@ -12,6 +12,13 @@ public class GameManager : MonoBehaviour
     public int mondongoCount;
     public int llaveAzoteaCount;
     public int coheteCuantico;
+
+    //SEMAFORO
+    public GameObject greenLight;
+    public GameObject yellowLight;
+    public GameObject redLight;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,15 +27,17 @@ public class GameManager : MonoBehaviour
         coheteJuguete = 0;
         mondongoCount = 0;
         llaveAzoteaCount = 0;
-        directionalRocket = 1;
-        coheteCuantico = 0; //PONLO A 0 CABRÓN!!!!!!!!!!
+        directionalRocket = 0;
+        coheteCuantico = 1; //PONLO A 0 CABRÓN!!!!!!!!!!
+
+        StartCoroutine(Semaforo());
     }
 
     // Update is called once per frame
     void Update()
-    {   
-        
-        
+    {
+
+
         //REINICIA ESCENA
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
@@ -38,7 +47,7 @@ public class GameManager : MonoBehaviour
 
     void SceneRestart()
     {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void BasicRocketUpdate(int _basicRocketToAdd)
@@ -99,5 +108,24 @@ public class GameManager : MonoBehaviour
     public void PermitControlPolimorfico()
     {
         playerControllerScript.PermitControl();
+    }
+
+    public IEnumerator Semaforo()
+    {
+        float greenTime = 10.0f;
+        float yellowTime = 3.0f;
+        float redTime = 7.0f;
+        while (true)
+        {
+            greenLight.SetActive(true);
+            redLight.SetActive(false);
+            yield return new WaitForSeconds(greenTime);
+            yellowLight.SetActive(true);
+            greenLight.SetActive(false);
+            yield return new WaitForSeconds(yellowTime);
+            redLight.SetActive(true);
+            yellowLight.SetActive(false);
+            yield return new WaitForSeconds(redTime);
+        }
     }
 }

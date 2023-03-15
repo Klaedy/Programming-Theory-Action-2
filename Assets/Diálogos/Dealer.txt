@@ -2,7 +2,7 @@
 Pssst... ¡eh, tú! Niño del brazo pocho, acércate.
 Mi brazo no está pocho
 Has obtenido: Propulsor de Aspiradora.
-Has obtenido: Cohete Simple.
+Has obtenido: Cohete Simple 
 
 Hiciste mucho ruido. Busca un lugar al aire libre y prueba este otro cohete.
-Tal vez pueda usar la azotea de Trino
+Tal vez pueda usar la azotea de Trino + Caja de loot

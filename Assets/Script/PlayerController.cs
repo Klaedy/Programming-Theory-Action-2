@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -8,6 +9,16 @@ public class PlayerController : MonoBehaviour
     private GameManager gameManagerScript;
     private StoryManager storyManagerScript;
     private BasicRocket basicRocketScript;
+    private DirectionalRocket directionalRocketScript;
+    private CoheteCuantico coheteCuanticoScript;
+    //Intercambio de controles con DIRECTIONAL ROCKET
+    public bool directionalRocketPhoned = false; //Recibe un True desde el Script DirectionalRocket para obtener asignación de script. Retorna a estado False tras colision
+    public bool directionalRocketAssigned = false; //Tapadera
+    public bool bringBackTheControlDude = false; //Tras la colision de DirectionalRocket se le devuelve el control y la cámara al player. Leer indicaciones.
+    //Intercambio de controles con COHETE CUANTICO
+    public bool coheteCuanticoPhoned = false;
+    public bool coheteCuanticoAssigned = false;
+    public bool bringBackTheControlDudeCuantico = false;
     private MarketNPC marketNPCScript;
     public GameObject basicRocketPrefab;
     public GameObject coheteJuguetePrefab;
@@ -15,7 +26,8 @@ public class PlayerController : MonoBehaviour
     public GameObject coheteCuanticoPrefab;
     public GameObject satelitesOn;
     private GameObject satelitesTrigger;
-    
+    private CinemachineVirtualCamera myCinemachine;
+
     private float speed = 15.0f;
     private float horizontalInput;
     private float verticalInput;
@@ -29,7 +41,8 @@ public class PlayerController : MonoBehaviour
 
     //LANZAMIENTO
     private float stayBack = 2.0f;
-    public bool kiteoBool = false; //Aleja al jugador e inicia el arranque del rocket
+    public bool kiteoBool = false; //Aleja al jugador e inicia el arranque del rocket   
+    public bool startParticle = false; //Envía a los cohetes la señal de Play Particle System
     private bool isRocketPlanted = false;
     private float kiteoTimer = 2.0f; //Cuenta atrás del lanzamiento
     private float kiteoTimerMax = 2.0f; //Referencia que restaura kiteoTimer tras ser usado
@@ -45,12 +58,13 @@ public class PlayerController : MonoBehaviour
     private GameObject solarTileset;
     private GameObject solarTriggerOn;
     private GameObject solarTriggerOff;
+
     private bool isInteriorOn = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
         playerRb = GetComponent<Rigidbody2D>();
         kiteoTimerMax = 2.0f;
         gameManagerScript = GameObject.Find("GameManager").GetComponent<GameManager>();
@@ -60,7 +74,7 @@ public class PlayerController : MonoBehaviour
         solarTriggerOn = GameObject.Find("Colliders/TriggerHangarOn");
         solarTriggerOff = GameObject.Find("Colliders/TriggerHangarOff");
         escalerasTrigger = GameObject.Find("Triggers/EjeYEscalera");
-        
+        myCinemachine = GameObject.Find("CM vcam1").GetComponent<CinemachineVirtualCamera>();
         satelitesTrigger = GameObject.Find("Triggers/SatelitesTrigger");
         Application.targetFrameRate = 60;
         isFirstTimeAzoteaPrivate = 0;
@@ -69,11 +83,6 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       // if (Input.GetKeyDown(KeyCode.Space))
-       // {          
-       //     StartTalk();
-       // }
-
         if (Input.GetKeyDown(KeyCode.Space) && isRocketPlanted == true)
         {
             PrenderLaMecha();
@@ -82,7 +91,30 @@ public class PlayerController : MonoBehaviour
         if (kiteoBool == true)
         {
             CountDown();
-        } 
+        }
+
+        if (!directionalRocketAssigned)
+        {           
+            if (directionalRocketPhoned == true)               
+                DirectionalRocketAssigned(); //Tengo acceso al Script de DirectionalRocket. Cuando colisione, vuelve false que exista.                        
+        }
+
+        if (bringBackTheControlDude == true)
+        {
+            //Este es el lugar en el que todas las booleanas deben volver a su estado por defecto y se le devuelve al player el control y la cámara//
+            BringMeBackEverythingDirectional();
+        }
+
+        if (!coheteCuanticoAssigned)
+        {
+            if (coheteCuanticoPhoned == true)
+                CoheteCuanticoAssigned();
+        }
+
+        if (bringBackTheControlDudeCuantico == true)
+        {
+            BringMeBackEverythingCuantico();
+        }
     }
 
     private void FixedUpdate()
@@ -96,19 +128,21 @@ public class PlayerController : MonoBehaviour
         {
             Vector2 rocketPosition = new Vector2(transform.position.x, 0);
             Instantiate(basicRocketPrefab, rocketPosition, basicRocketPrefab.transform.rotation);
+            startParticle = true;
+            storyManagerScript.DetenerTextoIntermitente3();
             gameManagerScript.BasicRocketUpdate(-1);
             StartCoroutine(Fixing());
-            
         }
 
         if (gameManagerScript.coheteJuguete >= 1 && collision.GetComponent<Collider2D>().tag == "Lanzadera" && Input.GetKeyDown(KeyCode.Space) && storyManagerScript.instalable2 == true)
         {
             Vector2 rocket2Position = new Vector2(transform.position.x, 0);
             Instantiate(coheteJuguetePrefab, rocket2Position, coheteJuguetePrefab.transform.rotation);
+
             gameManagerScript.CoheteJugueteUpdate(-1);
             StartCoroutine(Fixing2());
         }
-       
+
         if (gameManagerScript.directionalRocket >= 1 && collision.GetComponent<Collider2D>().tag == "Lanzadera2" && Input.GetKeyDown(KeyCode.Space))
         {
             Vector2 rocket3Position = new Vector2(transform.position.x, 20.4f);
@@ -142,7 +176,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-          //MOVIMIENTO EJE Y
+        //MOVIMIENTO EJE Y
         if (collision.gameObject == escalerasTrigger)
         {
             addMoveY = true;
@@ -151,7 +185,7 @@ public class PlayerController : MonoBehaviour
             playerRb.gravityScale = 0; // Desactiva la gravedad
             satelitesOn.SetActive(false);
         }
-          //HANGAR
+        //HANGAR
         if (collision.gameObject == solarTriggerOn)
         {
             isInteriorOn = true;
@@ -197,7 +231,7 @@ public class PlayerController : MonoBehaviour
     {
         RaycastHit2D hit = Physics2D.Raycast(playerRb.position + Vector2.up * 0.2f, lookDirection, 2.5f, LayerMask.GetMask("Rocket"));
         if (hit.collider != null)
-        {           
+        {
             kiteoBool = true;
             dontMove = true;
         }
@@ -254,17 +288,17 @@ public class PlayerController : MonoBehaviour
 
     //void StartTalk()
     //{
-      //  RaycastHit2D hit = Physics2D.Raycast(playerRb.position + Vector2.up * 0.2f, lookDirection, 1.5f, LayerMask.GetMask("NPC"));
-        //if (hit.collider != null)
-        //{
-            //Conversación con el trader
-          // if (marketNPCScript != null)
-            //{
-              //  marketNPCScript.Dialog();
-            //}
-        //}
+    //  RaycastHit2D hit = Physics2D.Raycast(playerRb.position + Vector2.up * 0.2f, lookDirection, 1.5f, LayerMask.GetMask("NPC"));
+    //if (hit.collider != null)
+    //{
+    //Conversación con el trader
+    // if (marketNPCScript != null)
+    //{
+    //  marketNPCScript.Dialog();
     //}
-    
+    //}
+    //}
+
     void HangarVisible()
     {
         if (isInteriorOn == true)
@@ -301,5 +335,47 @@ public class PlayerController : MonoBehaviour
     public Vector2 GetLookDirection()
     {
         return LookDirection;
+    }
+
+    public void DirectionalRocketAssigned()
+    {
+        directionalRocketScript = GameObject.Find("CoheteDireccional(Clone)").GetComponent<DirectionalRocket>();
+        directionalRocketAssigned = true;
+    }
+    public void BringMeBackEverythingDirectional()
+    {       
+        StartCoroutine(BringMeBackEveryThingDirectionalNumerator());
+        directionalRocketAssigned = false;
+        directionalRocketPhoned = false;
+        bringBackTheControlDude = false;
+    }
+    public IEnumerator BringMeBackEveryThingDirectionalNumerator()
+    {
+        yield return new WaitForSeconds(2);
+        myCinemachine.Follow = transform;       
+        yield return new WaitForSeconds(1);
+        PermitControl();
+    }
+
+    public IEnumerator BringMeBackEveryThingCuanticoNumerator()
+    {
+        yield return new WaitForSeconds(2);
+        myCinemachine.Follow = transform;
+        yield return new WaitForSeconds(1);
+        PermitControl();
+    }
+
+    public void CoheteCuanticoAssigned()
+    {
+        coheteCuanticoScript = GameObject.Find("CoheteCuantico(Clone)").GetComponent<CoheteCuantico>();
+        coheteCuanticoAssigned = true;
+    }
+
+    public void BringMeBackEverythingCuantico()
+    {
+        StartCoroutine(BringMeBackEveryThingCuanticoNumerator());
+        coheteCuanticoAssigned = false;
+        coheteCuanticoPhoned = false;
+        bringBackTheControlDudeCuantico = false;
     }
 }
