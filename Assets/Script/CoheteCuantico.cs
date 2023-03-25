@@ -10,19 +10,28 @@ public class CoheteCuantico : CoheteSimple
     public float teleport = 5.0f;
     private bool rbAssigned = false;
     private Rigidbody2D rocketRb;
+    public Animator coheteCuanticoAnimator;
     public ParticleSystem fireParticleBase1;
     public ParticleSystem fireParticleBase2;
     public ParticleSystem fireParticleLeft;
     public ParticleSystem fireParticleRight;
     public ParticleSystem smokeParticle;
+    public ParticleSystem teleportParticle;
     public GameObject lightParticleBase1;
     public GameObject lightParticleBase2;
     public GameObject lightParticleLeft;
     public GameObject lightParticleRight;
+    public bool lightParticlesOff;
+    public bool isMurcielagosOn = false;
     public GameObject smokePlatform;
     public GameObject explosionPrefab;
     public AudioClip turboClip;
     public AudioClip explosionClip;
+    public AudioClip teleportClip;
+    public AudioClip birdsClip;
+    private AudioSource audioSourceClip;
+    private AudioSource audioSourceClipMurcielagos;
+    public AudioClip errorButtonClip;
     private AudioSource audioSourceBase;
     private bool audioSourceBasePressed = false;
     private AudioSource audioSourceLeft;
@@ -30,10 +39,11 @@ public class CoheteCuantico : CoheteSimple
     private AudioSource audioSourceRight;
     private bool audioSourceRightPressed = false;
     private AudioSource audioSourceStart;
+    private AudioSource audioSourceTeleport;
     private bool audioSourceStartOn;
     private bool audioSourceDirectionalAssigned = false;
     private Vector2 whereAmI;
-    private bool alreadyPhoned = false;
+    private bool alreadyPhoned = false;    
     //Sustituye las lanzaderas por antiRockets en la función NoMoreRockets
     private bool collidersChanged = false;
     private Collider2D lanzadera1;
@@ -45,10 +55,13 @@ public class CoheteCuantico : CoheteSimple
 
 
     // Update is called once per frame
-    public void FixedUpdate()
+    public void Update()
     {
         Lanzamiento();
         whereAmI = transform.position;
+
+        if (!lightParticlesOff)
+            LightStartOff();
     }
 
 
@@ -149,13 +162,33 @@ public class CoheteCuantico : CoheteSimple
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                coheteCuanticoAnimator.SetTrigger("isTeleporting");
                 Vector2 newPosition = new Vector2(whereAmI.x, whereAmI.y + teleport);
                 rocketRb.MovePosition(newPosition);
+                transform.eulerAngles = Vector3.zero;
+                audioSourceTeleport.Play();
+                teleportParticle.Play();               
             }
 
             Vector2 currentDirection = transform.up; // Obtenemos la dirección actual del cohete hacia arriba
             float dot = Vector2.Dot(currentDirection, Vector2.up); // Calculamos el producto escalar entre la dirección actual y el vector arriba
         }
+    }
+
+    public void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.name == "triggerMurcielagosStart")
+        {
+            if (!isMurcielagosOn)
+            {
+                audioSourceClipMurcielagos.PlayOneShot(birdsClip);
+                StoryManager storyManagerScript = FindObjectOfType<StoryManager>();
+                storyManagerScript.murcielagosController = true;
+                StartCoroutine(AudioSourceClipMurcielagosRoutine());
+                isMurcielagosOn = true;
+            }
+            
+        }                  
     }
 
     public void OnCollisionEnter2D(Collision2D collision)
@@ -165,35 +198,41 @@ public class CoheteCuantico : CoheteSimple
             //TROZO DE CÓDIGO INDESTRUCTIBLE para cualquier clase
             GameManager gameManagerScript = FindObjectOfType<GameManager>();
             gameManagerScript.PermitControlPolimorfico();
+
             ZoomEffect zoomEffectScript = FindObjectOfType<ZoomEffect>();
             zoomEffectScript.ZoomIn();
             isLaunched = false;
             MoreRockets();
             AudioSource.PlayClipAtPoint(explosionClip, transform.position, 1f);
             playerControllerScript.bringBackTheControlDudeCuantico = true;
+            playerControllerScript.CuanticoBack();//Inicia Coroutina de 4segundos y resta -1CC lo que inicia proceso de LOOT
             Instantiate(explosionPrefab, whereAmI, explosionPrefab.transform.rotation);
             Destroy(gameObject);
             //TROZO DE CÓDIGO INDESTRUCTIBLE para cualquier clase           
         }
 
-        if (collision.collider.CompareTag("Radar"))
+        if (collision.collider.CompareTag("Player"))
         {
+            ZoomEffect zoomEffectScript = FindObjectOfType<ZoomEffect>();
+            zoomEffectScript.ZoomIn();
             isLaunched = false;
             AudioSource.PlayClipAtPoint(explosionClip, transform.position, 1f);
             MoreRockets();
             Instantiate(explosionPrefab, whereAmI, explosionPrefab.transform.rotation);
             playerControllerScript.bringBackTheControlDudeCuantico = true;
-            Destroy(collision.gameObject);
+            playerControllerScript.CuanticoBack();//Inicia Coroutina de 4segundos y resta -1CC lo que inicia proceso de LOOT
             Destroy(gameObject);
         }
 
-        if (collision.collider.CompareTag("Player"))
+        if (collision.gameObject.name == "PulsadorFinal")
         {
-            isLaunched = false;
+            ZoomEffect zoomEffectScript = FindObjectOfType<ZoomEffect>();
+            zoomEffectScript.ZoomIn();
             AudioSource.PlayClipAtPoint(explosionClip, transform.position, 1f);
-            MoreRockets();
+            audioSourceClip.PlayOneShot(errorButtonClip);
             Instantiate(explosionPrefab, whereAmI, explosionPrefab.transform.rotation);
-            playerControllerScript.bringBackTheControlDudeCuantico = true;
+            StoryManager storyManagerScript = FindObjectOfType<StoryManager>();
+            storyManagerScript.pulsadorPulsed = true;
             Destroy(gameObject);
         }
     }
@@ -218,6 +257,10 @@ public class CoheteCuantico : CoheteSimple
         audioSourceDirectionalAssigned = true;
         audioSourceStart = audioSources[3];
         audioSourceStart.clip = turboClip;
+        audioSourceTeleport = audioSources[4];
+        audioSourceTeleport.clip = teleportClip;
+        audioSourceClip = audioSources[5];
+        audioSourceClipMurcielagos = audioSources[6];
     }
 
     public IEnumerator SmokingTime()
@@ -254,5 +297,26 @@ public class CoheteCuantico : CoheteSimple
         antiRocket1.enabled = false;
         lanzadera2.enabled = true;
         antiRocket2.enabled = false;
+    }
+
+    public void LightStartOff()
+    {
+        lightParticleBase1.SetActive(false);
+        lightParticleBase2.SetActive(false);
+        lightParticleLeft.SetActive(false);
+        lightParticleRight.SetActive(false);
+        lightParticlesOff = true;
+    }
+
+    public IEnumerator AudioSourceClipMurcielagosRoutine()
+    {
+        yield return new WaitForSeconds(1);
+        audioSourceClipMurcielagos.volume = 0.8f;
+        yield return new WaitForSeconds(1);
+        audioSourceClipMurcielagos.volume = 0.6f;
+        yield return new WaitForSeconds(1);
+        audioSourceClipMurcielagos.volume = 0.4f;
+        yield return new WaitForSeconds(1);
+        audioSourceClipMurcielagos.volume = 0f;
     }
 }

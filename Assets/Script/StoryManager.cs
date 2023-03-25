@@ -3,16 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Cinemachine;
 
 public class StoryManager : MonoBehaviour
 {
     private PlayerController playerControllerScript;
+    private GameObject playerGameObject;
+    private AudioSource audioSource;
+    public AudioClip teleportClip;
     private GameManager gameManagerScript;
     public TextMeshProUGUI installPropulsorText;
     public TextMeshProUGUI installAzoteaText;
     public TextMeshProUGUI installAzoteaText3;
+    private CinemachineVirtualCamera myCinemachine;
+    private ZoomEffect zoomEffectScript;
     public bool storyStarted = false;
-    public bool gotCraneo = false;   
+    public bool gotCraneo = false;
 
     //TRIGGERS
     private GameObject triggerBasura;
@@ -20,10 +26,19 @@ public class StoryManager : MonoBehaviour
     public GameObject triggerPideLlaves;
     public GameObject lootDirectionalRocket; //Puedo lootear un directional Rocket de la estantería
     public GameObject noLootDirectionalRocket; //No puedo lootearlo
+    public GameObject noMoreLootDirectionalRocket; //No puedo lootearlo NUNCA MÁS
+    public GameObject lootCC; //Cohete Cuantico Looteable;
+    public GameObject pulsadorGreen;
+    public GameObject pulsadorRed;
+    public GameObject triggerMurcielagos; //evita que se reproduzca audio de pájaros más de una vez.
+    public Animator pulsadorContainer;
+    public bool alreadyLooteableCC = false; //
     public bool canILoot = false;
     public bool instalable = false; //Crea un delay entre la caja de texto Mondongo2 y la instalación del cohete
     public bool instalable2 = false; //lo mismo para Cohete-Juguete
+    public bool pulsadorPulsed = false; //activa la caída del container cuando CC se estrella contra pulsador
     public float instalableDelay = 0;
+    public bool tengoAccesoCuantico = false; //En el momento que puedo lanzar cohetes cuanticos, dejo de poder lootear direccionales;
 
     //MONDONGOS
     public GameObject mondongo1;
@@ -35,58 +50,128 @@ public class StoryManager : MonoBehaviour
     //TRADER
     private GameObject traderTalk2;
 
+    //DEALER
+    public GameObject dealerTalk5;
+
     //TRINO
     public bool alreadyExplotedCoheteJuguete = false;
     public GameObject trinoTalk2;
     public GameObject trinoTalk4;
+    public AudioClip doorBoltClip;
 
     //FUNCIONALIDADES
     private Coroutine textoIntermitenteCoroutine;
     private Coroutine textoIntermitenteCoroutine2;
     private Coroutine textoIntermitenteCoroutine3;
 
+    //CONTAINER
+    public AudioClip buttonOn;
+    public bool ganchosMoving = false;
+    public ParticleSystem murcielagosParticle;
+    public bool murcielagosController = false;
+    public bool murcielagosController2 = false;
+
+    //SMOKE & START END
+    public bool smokeBool = false; //Es activado desde el script de Ganchos justo tras estrellarse el container
+    public ParticleSystem smokeParticle;
+    public AudioClip bigExplosion;
+    private AudioSource audioSourceBigExplosion;
+    public GameObject traderNPC;
+    public GameObject containerFinal;
+    public GameObject dealerNPC;
+    public GameObject dealerFinalNPC;
+
     // Start is called before the first frame update
     void Start()
-    {
+    {       
+        playerGameObject = GameObject.Find("Player");
         playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+        audioSource = GetComponent<AudioSource>();
+        audioSource.clip = doorBoltClip;
         gameManagerScript = GameObject.Find("GameManager").GetComponent<GameManager>();
         traderTalk2 = GameObject.Find("NPCs/Trader/TraderTalk2");
-        triggerBasura = GameObject.Find("Triggers/TriggerBasura");       
+        triggerBasura = GameObject.Find("Triggers/TriggerBasura");
+        audioSourceBigExplosion = GetComponent<AudioSource>();
+        myCinemachine = GameObject.Find("CM vcam1").GetComponent<CinemachineVirtualCamera>();
+        zoomEffectScript = GameObject.Find("CameraManager").GetComponent<ZoomEffect>();
     }
 
     // Update is called once per frame
     void Update()
     {
-       if (storyStarted == true)
+        if (gameManagerScript.chipCount == 1) //PONLO A 15 CABRÓN!!!!
+        {
+            dealerTalk5.SetActive(true);
+        }
+
+        if (storyStarted == true)
         {
             StartCoroutine(PauseAfterExplosion());
             storyStarted = false;
         }
 
-       if (alreadyExplotedCoheteJuguete == true)
+        if (alreadyExplotedCoheteJuguete == true)
         {
             TrinoTalk2();
         }
 
-       if (gameManagerScript.llaveAzoteaCount == 3)
+        if (gameManagerScript.llaveAzoteaCount == 3)
         {
             TrinoTalk4();
             gameManagerScript.Got1KeyAzotea();
         }
 
-       //Poder o no lootear Directional Rocket de la estantería
-        if (gameManagerScript.directionalRocket == 0 && canILoot == true)
+        if (smokeBool == true)
+            SmokeContainer();
+
+        //Poder o no lootear Directional Rocket de la estantería
+        if (gameManagerScript.directionalRocket == 0 && canILoot == true && tengoAccesoCuantico == false)
             CanLoot();
 
-       if (gameManagerScript.directionalRocket == 1 && canILoot == true)        
-            CantLoot();       
+        if (gameManagerScript.directionalRocket == 1 && canILoot == true && tengoAccesoCuantico == false)
+            CantLoot();
+
+        if (alreadyLooteableCC == true && tengoAccesoCuantico == true)
+            CanLootCC();
+
+        //Relativo a la escena del Container
+        if (pulsadorPulsed == true)
+            Pulsador();
+
+        if(murcielagosController == true)
+        {
+            if (!murcielagosController2)
+            {
+                murcielagosParticle.Play();
+                Destroy(triggerMurcielagos);
+                murcielagosController2 = true;
+            }
+        }
     }
 
+    public void SmokeContainer()
+    {
+        audioSourceBigExplosion.volume = 0.4f;
+        audioSourceBigExplosion.clip = bigExplosion;
+        audioSourceBigExplosion.Play();
+        smokeParticle.Play();
+        containerFinal.SetActive(true);
+        dealerNPC.SetActive(false);
+        dealerFinalNPC.SetActive(true);
+        StartCoroutine(FinalContainer());
+        smokeBool = false;
+    }
+    public void Pulsador()
+    {
+        pulsadorContainer.SetBool("pulsadorPulsed", pulsadorPulsed);
+        StartCoroutine(PulsadorTurnRed());
+        pulsadorPulsed = false; //Línea final obligatoria para evitar que se siga reproduciendo
+    }
     public void TriggerBasuraON()
     {
         triggerBasura.SetActive(true);
     }
-    
+
     public void GotCraneo()
     {
         gotCraneo = true;
@@ -128,7 +213,7 @@ public class StoryManager : MonoBehaviour
     {
         float tiempoEncendido3 = 2f;
         float tiempoApagado3 = 0.5f;
-        while(true)
+        while (true)
         {
             installAzoteaText3.gameObject.SetActive(true);
             yield return new WaitForSeconds(tiempoEncendido3);
@@ -144,9 +229,18 @@ public class StoryManager : MonoBehaviour
         StopCoroutine(LanzaderaON());
     }
 
+    IEnumerator FinalContainer()
+    {
+        yield return new WaitForSeconds(8);
+        zoomEffectScript.ZoomIn();
+        myCinemachine.Follow = playerGameObject.transform;
+        yield return new WaitForSeconds(1);
+        playerControllerScript.PermitControl();
+    }
+
     public void Mondongo2()
     {
-        mondongo2.SetActive(true);       
+        mondongo2.SetActive(true);
     }
 
     public void Mondongo3()
@@ -251,4 +345,50 @@ public class StoryManager : MonoBehaviour
         lootDirectionalRocket.SetActive(false);
         noLootDirectionalRocket.SetActive(true);
     }
+
+    public void CanLootCC()
+    {
+        if(gameManagerScript.coheteCuantico == 0)
+        {
+            lootCC.SetActive(true);
+            audioSource.PlayOneShot(teleportClip);
+            alreadyLooteableCC = false;
+        }
+    }
+
+    public void GiveMeTheChipsLittleKiddo()
+    {
+        gameManagerScript.ChipUpdate(-15);
+    }
+
+    public void AccesoCuanticoTrue()
+    {
+        tengoAccesoCuantico = true;
+        lootDirectionalRocket.SetActive(false);
+        noLootDirectionalRocket.SetActive(false);
+        noMoreLootDirectionalRocket.SetActive(true);
+    }
+
+    public void TrinoOpenDoor()
+    {
+        audioSource.PlayOneShot(doorBoltClip);
+    }
+
+    public IEnumerator PulsadorTurnRed()
+    {
+        yield return new WaitForSeconds(1);
+        pulsadorGreen.SetActive(false);
+        pulsadorRed.SetActive(true);
+        audioSource.PlayOneShot(buttonOn);       
+        pulsadorPulsed = false;
+        StartCoroutine(PulsadorTurnRedDelay());
+    }
+
+    public IEnumerator PulsadorTurnRedDelay()
+    {
+        yield return new WaitForSeconds(2);
+        ganchosMoving = true;
+    }
+        
+        
 }

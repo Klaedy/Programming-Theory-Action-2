@@ -9,7 +9,7 @@ TagManager:
   - Trigger
   - Lanzadera2
   - Radar
-  - Coin
+  - Chip
   layers:
   - Default
   - TransparentFX
@@ -23,7 +23,7 @@ TagManager:
   - AntiRocket
   - RealRocket
   - ReposaCohetes
-  - 
+  - Container
   - 
   - 
   - 
@@ -46,6 +46,9 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: -5
+    uniqueID: 2598630555
     locked: 0
   - name: -4
     uniqueID: 2566795327

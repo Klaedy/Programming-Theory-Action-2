@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     public Rigidbody2D playerRb;
     private GameManager gameManagerScript;
     private StoryManager storyManagerScript;
+    private AudioSource audioSource;
+    public AudioClip chipClip;
     private BasicRocket basicRocketScript;
     private DirectionalRocket directionalRocketScript;
     private CoheteCuantico coheteCuanticoScript;
@@ -70,6 +72,7 @@ public class PlayerController : MonoBehaviour
         gameManagerScript = GameObject.Find("GameManager").GetComponent<GameManager>();
         storyManagerScript = GameObject.Find("StoryManager").GetComponent<StoryManager>();
         marketNPCScript = GameObject.Find("Trader").GetComponent<MarketNPC>();
+        audioSource = GetComponent<AudioSource>();
         solarTileset = GameObject.Find("Solar");
         solarTriggerOn = GameObject.Find("Colliders/TriggerHangarOn");
         solarTriggerOff = GameObject.Find("Colliders/TriggerHangarOff");
@@ -156,7 +159,7 @@ public class PlayerController : MonoBehaviour
         {
             Vector2 rocket3Position = new Vector2(transform.position.x, 20.4f);
             Instantiate(coheteCuanticoPrefab, rocket3Position, coheteCuanticoPrefab.transform.rotation);
-            gameManagerScript.CoheteCuanticoUpdate(-1);
+            gameManagerScript.CoheteCuanticoUpdate(-1); //Aquí me pasé de listo->La contabilización de su destrucción en este tipo de cohete debe ir en su colisión.
             //storyManagerScript.DetenerTextoIntermitente2();
             StartCoroutine(Fixing2());
         }
@@ -201,7 +204,7 @@ public class PlayerController : MonoBehaviour
             storyManagerScript.InstalarCohete2();
         }
 
-        HangarVisible();
+            HangarVisible();
         //HANGAR
 
         //Mondongos//
@@ -231,6 +234,7 @@ public class PlayerController : MonoBehaviour
         {
             gameManagerScript.ChipUpdate(1);
             Destroy(collision.gameObject);
+            audioSource.PlayOneShot(chipClip);
         }
     }
 
@@ -373,6 +377,18 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(1);
         PermitControl();
     }
+
+    public void CuanticoBack()
+    {
+        StartCoroutine(CuanticoBackNumerator());
+    }
+
+    public IEnumerator CuanticoBackNumerator()
+    {
+        yield return new WaitForSeconds(4);       
+        storyManagerScript.alreadyLooteableCC = true;
+    }
+        
 
     public void CoheteCuanticoAssigned()
     {

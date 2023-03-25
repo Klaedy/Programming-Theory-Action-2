@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     public int llaveAzoteaCount;
     public int coheteCuantico;
     public int chipCount;
+    
 
     //SEMAFORO
     public GameObject greenLight;
@@ -29,8 +30,8 @@ public class GameManager : MonoBehaviour
         coheteJuguete = 0;
         mondongoCount = 0;
         llaveAzoteaCount = 0;
-        directionalRocket = 1;
-        coheteCuantico = 0; //PONLO A 0 CABRÓN!!!!!!!!!!
+        directionalRocket = 0;
+        coheteCuantico = 1; //PONLO A 0 CABRÓN!!!!!!!!!!
 
         StartCoroutine(Semaforo());
     }
@@ -110,6 +111,11 @@ public class GameManager : MonoBehaviour
     public void Got1KeyAzotea()
     {
         LlaveAzoteaUpdate(1);
+    }
+
+    public void DirectionalRocketNEVERMORE()
+    {
+        directionalRocket = 0;
     }
 
     public void PermitControlPolimorfico()
