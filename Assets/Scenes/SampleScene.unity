@@ -126056,6 +126056,10 @@ PrefabInstance:
       propertyPath: coheteCuanticoPrefab
       value: 
       objectReference: {fileID: 4280208893616241482, guid: 59c4cd3d301d0e2469eadac1cf5a3cea, type: 3}
+    - target: {fileID: 8128283936258607004, guid: 5299f31bc48535d43b2cf9fe8ca13e9e, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 8128283936258607005, guid: 5299f31bc48535d43b2cf9fe8ca13e9e, type: 3}
       propertyPath: m_SortingLayer
       value: 7
@@ -126063,6 +126067,10 @@ PrefabInstance:
     - target: {fileID: 8128283936258607005, guid: 5299f31bc48535d43b2cf9fe8ca13e9e, type: 3}
       propertyPath: m_SortingLayerID
       value: 45774923
+      objectReference: {fileID: 0}
+    - target: {fileID: 8128283936258607005, guid: 5299f31bc48535d43b2cf9fe8ca13e9e, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8128283936258607006, guid: 5299f31bc48535d43b2cf9fe8ca13e9e, type: 3}
       propertyPath: m_RootOrder
@@ -126217,3 +126225,23 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &8128283937185383322
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 802203725}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ebb6c703b01135843801e436d7ff87ee, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0

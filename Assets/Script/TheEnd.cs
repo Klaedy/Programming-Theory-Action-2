@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TheEnd : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class TheEnd : MonoBehaviour
     public float alpha = 0f;
     private SpriteRenderer spriteR;
     public bool isFinishing = false;
+    private bool goingCredits = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,6 +25,11 @@ public class TheEnd : MonoBehaviour
         {
             Finishing();           
         }
+
+        if (isFinishing == false && goingCredits == true)
+        {
+            StartCoroutine(ThisIsTheEnd());
+        }
             
     }
 
@@ -33,11 +40,19 @@ public class TheEnd : MonoBehaviour
         if (alpha >= 2f)
         {
             isFinishing = false;
+            goingCredits = true;
         }
     }
 
     public void TurnFinishOn()
     {
         isFinishing = true;
+    }
+
+    public IEnumerator ThisIsTheEnd()
+    {
+        goingCredits = false;
+        yield return new WaitForSeconds(3);
+        SceneManager.LoadScene(2);
     }
 }
