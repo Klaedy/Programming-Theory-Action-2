@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     private PlayerController playerControllerScript;
+    private AudioManager audioManagerScript;
     public int basicRocket;
     public int directionalRocket;
     public int coheteJuguete;
@@ -13,7 +14,11 @@ public class GameManager : MonoBehaviour
     public int llaveAzoteaCount;
     public int coheteCuantico;
     public int chipCount;
-    
+
+    //MENÚ DE PAUSA
+    public bool isPaused = false;
+    public GameObject canvasPause;
+    public GameObject canvasOpciones;
 
     //SEMAFORO
     public GameObject greenLight;
@@ -25,13 +30,14 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+        audioManagerScript = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         chipCount = 0;
         basicRocket = 0;
         coheteJuguete = 0;
         mondongoCount = 0;
         llaveAzoteaCount = 0;
         directionalRocket = 0;
-        coheteCuantico = 1; //PONLO A 0 CABRÓN!!!!!!!!!!
+        coheteCuantico = 0; //PONLO A 0 CABRÓN!!!!!!!!!!
 
         StartCoroutine(Semaforo());
     }
@@ -39,13 +45,43 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-
         //REINICIA ESCENA
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
             SceneRestart();
         }
+
+        //MENÚ DE PAUSA
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            PauseGame(); //Detiene El tiempo;
+        }
+        PausedGame(); //Activa y desactiva el canvas;
+        //
+
+    }
+
+    void PauseGame()
+    {
+        isPaused = !isPaused;
+        Time.timeScale = isPaused ? 0 : 1;
+    }
+
+    void PausedGame()
+    {
+        if (isPaused == true)
+            canvasPause.SetActive(true);
+
+        if (isPaused == false)
+        {
+            canvasPause.SetActive(false);
+            canvasOpciones.SetActive(false);
+        }           
+    }
+
+    public void FadeOut()
+    {
+        audioManagerScript.FadeOutOne();
     }
 
     void SceneRestart()

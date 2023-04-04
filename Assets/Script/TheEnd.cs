@@ -5,15 +5,17 @@ using UnityEngine.SceneManagement;
 
 public class TheEnd : MonoBehaviour
 {
+    private AudioManager audioManagerScript;
     public float transitionTime = 5f;
     public float alpha = 0f;
     private SpriteRenderer spriteR;
     public bool isFinishing = false;
     private bool goingCredits = false;
+    private bool finalSongPlaying = false;
     // Start is called before the first frame update
     void Start()
     {
-
+        audioManagerScript = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         spriteR = GetComponent<SpriteRenderer>();
         spriteR.color = new Color(0, 0, 0, alpha);
     }
@@ -35,6 +37,7 @@ public class TheEnd : MonoBehaviour
 
     public void Finishing()
     {
+        
         alpha += Time.deltaTime / transitionTime;
         GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, alpha);
         if (alpha >= 2f)
@@ -53,6 +56,11 @@ public class TheEnd : MonoBehaviour
     {
         goingCredits = false;
         yield return new WaitForSeconds(3);
+        if (!finalSongPlaying)
+        {
+            audioManagerScript.FinalSong();
+            finalSongPlaying = true;
+        }       
         SceneManager.LoadScene(2);
     }
 }

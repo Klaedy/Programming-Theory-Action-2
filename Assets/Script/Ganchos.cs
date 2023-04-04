@@ -6,6 +6,7 @@ using Cinemachine;
 public class Ganchos : MonoBehaviour
 {
     private StoryManager storyManagerScript;
+    private AudioManager audioManagerScript;
     private Rigidbody2D containerRb;
     public GameObject[] backgroundLength;
     public GameObject[] realSheetLength;
@@ -28,6 +29,7 @@ public class Ganchos : MonoBehaviour
     void Start()
     {
         storyManagerScript = GameObject.Find("StoryManager").GetComponent<StoryManager>();
+        audioManagerScript = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         containerRb = GameObject.Find("Container").GetComponent<Rigidbody2D>();
         containerCollider2D = GameObject.Find("Container").GetComponent<Collider2D>();
         myCinemachine = GameObject.Find("CM vcam1").GetComponent<CinemachineVirtualCamera>();
@@ -79,6 +81,7 @@ public class Ganchos : MonoBehaviour
         gancho2Animator[3].SetTrigger("gancho2Activated");
         audioSourceClip.Play();
         yield return new WaitForSeconds(0.5f);
+        audioManagerScript.FadeOutTwo();
         containerRb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
         containerCollider2D.isTrigger = false;
         storyManagerScript.traderNPC.SetActive(false);      

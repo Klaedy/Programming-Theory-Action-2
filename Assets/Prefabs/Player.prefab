@@ -524,6 +524,8 @@ GameObject:
   - component: {fileID: 8128283936258607004}
   - component: {fileID: 8128283936258606995}
   - component: {fileID: 8128283936258606994}
+  - component: {fileID: 8128283937185383321}
+  - component: {fileID: 8128283937185383322}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -586,7 +588,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 45774923
-  m_SortingLayer: 6
+  m_SortingLayer: 7
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 9947d615b6ee5fb419d9a8afabf84830, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -612,7 +614,7 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.00999999, y: 0.62}
+  m_Offset: {x: -0.00999999, y: 0.5}
   m_Size: {x: 0.6341197, y: 1.4114403}
   m_Direction: 0
 --- !u!50 &8128283936258606995
@@ -649,12 +651,136 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerRb: {fileID: 0}
+  chipClip: {fileID: 8300000, guid: f9ce0bd536f6f4244b7151c5ba3c341e, type: 3}
+  directionalRocketPhoned: 0
+  directionalRocketAssigned: 0
+  bringBackTheControlDude: 0
+  coheteCuanticoPhoned: 0
+  coheteCuanticoAssigned: 0
+  bringBackTheControlDudeCuantico: 0
   basicRocketPrefab: {fileID: 3696587159931185042, guid: 2a1217fbf8c8f0349ba383ade7c07381, type: 3}
   coheteJuguetePrefab: {fileID: 2504899200128091323, guid: 38b8b1e4b1a1e264d8709781979d5cec, type: 3}
   directionalRocketPrefab: {fileID: 4280208893616241482, guid: 63636b35ce472db4eb28d2c18b37e2c8, type: 3}
-  coheteCuanticoPrefab: {fileID: 0}
+  coheteCuanticoPrefab: {fileID: 4280208893616241482, guid: 59c4cd3d301d0e2469eadac1cf5a3cea, type: 3}
   satelitesOn: {fileID: 0}
   dontMove: 0
   addMoveY: 0
   kiteoBool: 0
+  startParticle: 0
   safeDelay: 0
+--- !u!82 &8128283937185383321
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8128283936258606993}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!95 &8128283937185383322
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8128283936258606993}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ebb6c703b01135843801e436d7ff87ee, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0

@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     private BasicRocket basicRocketScript;
     private DirectionalRocket directionalRocketScript;
     private CoheteCuantico coheteCuanticoScript;
+    private Animator animator;
     //Intercambio de controles con DIRECTIONAL ROCKET
     public bool directionalRocketPhoned = false; //Recibe un True desde el Script DirectionalRocket para obtener asignación de script. Retorna a estado False tras colision
     public bool directionalRocketAssigned = false; //Tapadera
@@ -30,7 +31,7 @@ public class PlayerController : MonoBehaviour
     private GameObject satelitesTrigger;
     private CinemachineVirtualCamera myCinemachine;
 
-    private float speed = 15.0f;
+    private float speed = 5.0f;
     private float horizontalInput;
     private float verticalInput;
     Vector2 lookDirection = new Vector2(1, 0); //Las cosas a la cara!!!
@@ -63,6 +64,12 @@ public class PlayerController : MonoBehaviour
 
     private bool isInteriorOn = false;
 
+    //CAMERA START
+    private bool firstPlane = false;
+    private bool secondPlane = false;
+    private GameObject cameraStartObject;
+    private GameObject canvasIntro;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -81,6 +88,10 @@ public class PlayerController : MonoBehaviour
         satelitesTrigger = GameObject.Find("Triggers/SatelitesTrigger");
         Application.targetFrameRate = 60;
         isFirstTimeAzoteaPrivate = 0;
+        animator = GetComponent<Animator>();
+        cameraStartObject = GameObject.Find("CameraStart");
+        canvasIntro = GameObject.Find("CanvasIntro");
+        speed = 10.0f; //CAMBIALO A 5
     }
 
     // Update is called once per frame
@@ -117,6 +128,19 @@ public class PlayerController : MonoBehaviour
         if (bringBackTheControlDudeCuantico == true)
         {
             BringMeBackEverythingCuantico();
+        }
+
+        if (firstPlane == false)
+        {
+            myCinemachine.Follow = cameraStartObject.transform;
+            firstPlane = true;
+        }
+
+        if (firstPlane == true && Input.GetKeyDown(KeyCode.Space) && secondPlane == false)
+        {
+            canvasIntro.SetActive(false);
+            myCinemachine.Follow = transform;
+            secondPlane = true;
         }
     }
 
@@ -200,8 +224,13 @@ public class PlayerController : MonoBehaviour
         }
 
         if (collision.gameObject == satelitesTrigger && isFirstTimeAzoteaPrivate == 0)
-        {
+        {           
             storyManagerScript.InstalarCohete2();
+        }
+
+        if (isFirstTimeAzoteaPrivate == 1)
+        {
+            Debug.Log("FIRST TIME AZOTEA PRIVATE");
         }
 
             HangarVisible();
@@ -271,13 +300,24 @@ public class PlayerController : MonoBehaviour
     {
         if (dontMove == false && addMoveY == false)
         {
-            //Vector2 position = playerRb.position;
             horizontalInput = Input.GetAxis("Horizontal");
-            //transform.Translate(Vector2.right * horizontalInput * speed * Time.deltaTime);
-            //playerRb.MovePosition(position);
             playerRb.velocity = new Vector2(horizontalInput * speed, playerRb.velocity.y);
+            if (horizontalInput < -0.5f)
+            {
+                animator.SetFloat("Move X", -1);
+                animator.SetFloat("Blend", 0);
+            }
+            if (horizontalInput > 0.5f)
+            {
+                animator.SetFloat("Move X", 1);
+                animator.SetFloat("Blend", 0);
+            }
+            if (horizontalInput > -0.4f && horizontalInput < 0.4f)
+            {
+                animator.SetFloat("Move X", 0);
+                animator.SetFloat("Blend", 0);
+            }
         }
-
         else if (dontMove == false && addMoveY == true)
         {
             horizontalInput = Input.GetAxis("Horizontal");
@@ -402,5 +442,10 @@ public class PlayerController : MonoBehaviour
         coheteCuanticoAssigned = false;
         coheteCuanticoPhoned = false;
         bringBackTheControlDudeCuantico = false;
+    }
+
+    public void ChangeSpeed()
+    {
+        speed = 10f;
     }
 }

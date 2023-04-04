@@ -58,6 +58,8 @@ public class StoryManager : MonoBehaviour
     public GameObject trinoTalk2;
     public GameObject trinoTalk4;
     public AudioClip doorBoltClip;
+    public GameObject cameraFocusDoor;
+    public GameObject muroEscalera;
 
     //FUNCIONALIDADES
     private Coroutine textoIntermitenteCoroutine;
@@ -99,7 +101,7 @@ public class StoryManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (gameManagerScript.chipCount == 1) //PONLO A 15 CABRÓN!!!!
+        if (gameManagerScript.chipCount == 9) //PONLO A 9 CABRÓN!!!!
         {
             dealerTalk5.SetActive(true);
         }
@@ -294,10 +296,11 @@ public class StoryManager : MonoBehaviour
     {
         if (textoIntermitenteCoroutine2 != null)
         {
+            Debug.Log("debería parar el texto");
             StopCoroutine(textoIntermitenteCoroutine2);
             playerControllerScript.isFirstTimeAzoteaPublic++;
-            textoIntermitenteCoroutine2 = null;
             installAzoteaText.gameObject.SetActive(false);
+            textoIntermitenteCoroutine2 = null;           
         }
     }
 
@@ -371,7 +374,23 @@ public class StoryManager : MonoBehaviour
 
     public void TrinoOpenDoor()
     {
+        
+    }
+
+    public void CameraGoToDoor()
+    {
+        myCinemachine.Follow = cameraFocusDoor.transform;
+        StartCoroutine(CameraBackToPlayerRoutine());
+    }
+
+    public IEnumerator CameraBackToPlayerRoutine()
+    {
+        yield return new WaitForSeconds(2);
         audioSource.PlayOneShot(doorBoltClip);
+        muroEscalera.SetActive(false);
+        yield return new WaitForSeconds(1);
+        myCinemachine.Follow = playerGameObject.transform;
+        playerControllerScript.PermitControl();
     }
 
     public IEnumerator PulsadorTurnRed()

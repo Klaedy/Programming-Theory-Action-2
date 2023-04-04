@@ -21,6 +21,7 @@ public class DirectionalRocket : CoheteSimple
     public GameObject smokePlatform;
     public GameObject explosionPrefab;
     public GameObject chipPrefab;
+    private SpriteRenderer directionalSprite;
     public AudioClip turboClip;
     public AudioClip explosionClip;
     private AudioSource audioSourceBase;
@@ -179,7 +180,11 @@ public class DirectionalRocket : CoheteSimple
             Instantiate(explosionPrefab, whereAmI, explosionPrefab.transform.rotation);
             playerControllerScript.bringBackTheControlDude = true;
             Destroy(collision.gameObject);
-            Destroy(gameObject);
+            fireParticleBase1.Stop();
+            fireParticleBase2.Stop();
+            fireParticleLeft.Stop();
+            fireParticleRight.Stop();
+            GetComponent<SpriteRenderer>().enabled = false;                               
         }
 
         if (collision.collider.CompareTag("Player"))
@@ -253,8 +258,18 @@ public class DirectionalRocket : CoheteSimple
 
     public void GenerateChips()
     {
+        StartCoroutine(GenerateChipsRoutine());       
+    }
+
+    public IEnumerator GenerateChipsRoutine()
+    {
+        yield return new WaitForSeconds(0.3f);
         Instantiate(chipPrefab, whereAmI, chipPrefab.transform.rotation);
+        yield return new WaitForSeconds(0.3f);
         Instantiate(chipPrefab, whereAmI, chipPrefab.transform.rotation);
+        yield return new WaitForSeconds(0.3f);
         Instantiate(chipPrefab, whereAmI, chipPrefab.transform.rotation);
+        yield return new WaitForSeconds(0.1f);
+        Destroy(gameObject);
     }
 }
