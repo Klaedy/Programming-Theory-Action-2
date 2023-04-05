@@ -23,6 +23,6 @@ public class MarketNPC : MonoBehaviour
     public void EntregaPropulsor()
     {
         gameManagerScript.BasicRocketUpdate(1);
-        Debug.Log("Propulsor añadido");
+        
     }
 }

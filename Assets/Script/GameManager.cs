@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -25,13 +26,20 @@ public class GameManager : MonoBehaviour
     public GameObject yellowLight;
     public GameObject redLight;
 
+    //CANVAS CHIPS
+    private GameObject chipsCanvas;
+    public TextMeshProUGUI chipsText;
+    public int chipLeft;
+
 
     // Start is called before the first frame update
     void Start()
     {
         playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
         audioManagerScript = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+        chipsCanvas = GameObject.Find("ChipsCanvas");       
         chipCount = 0;
+        chipLeft = 9;
         basicRocket = 0;
         coheteJuguete = 0;
         mondongoCount = 0;
@@ -46,10 +54,10 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         //REINICIA ESCENA
-        if (Input.GetKeyDown(KeyCode.Backspace))
-        {
-            SceneRestart();
-        }
+        //if (Input.GetKeyDown(KeyCode.Backspace))
+        //{
+            //SceneRestart();
+        //}
 
         //MENÚ DE PAUSA
         if (Input.GetKeyDown(KeyCode.Return))
@@ -61,6 +69,16 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public void ChipsLeftUpdate (int _chipToRest)
+    {
+        chipLeft -= _chipToRest;
+        chipsText.text = "Faltan " + chipLeft;
+    }
+
+    public void YouAreFullOfChips()
+    {
+
+    }
     void PauseGame()
     {
         isPaused = !isPaused;

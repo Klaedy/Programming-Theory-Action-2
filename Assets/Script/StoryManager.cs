@@ -296,7 +296,7 @@ public class StoryManager : MonoBehaviour
     {
         if (textoIntermitenteCoroutine2 != null)
         {
-            Debug.Log("debería parar el texto");
+            
             StopCoroutine(textoIntermitenteCoroutine2);
             playerControllerScript.isFirstTimeAzoteaPublic++;
             installAzoteaText.gameObject.SetActive(false);

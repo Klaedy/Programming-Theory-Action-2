@@ -24,3 +24,27 @@ Has encontrado: Cráneo Humano x1
 
 
 Desconozco cómo ha llegado eso a mi sección de ofertas.
+
+
+
+CONVERSACION 1 CON TRADER
+Hugo: He venido a recuperar mi propulsor.
+Usurero: Vaya... ¡Hugo! ¡Hugo BrazoPocho! Te daba por muerto, chaval. ¿Seguro que no lo estás?
+Usurero: Tenías una cara terrible la última vez que te vi. A decir verdad, la sigues teniendo. ¿Seguro que no estás muerto?
+Hugo: Ya, ya... El propulsor, por favor.
+*Has conseguido "Propulsor de andadera" x1*
+Hugo: Vaya, no recuerdo que fuese tan ligero.
+Usurero: Eh... eso es porque lo he mejorado. Es más ligero porque es mejor.
+Hugo: Tiene sentido, supongo que por eso me has cobrado el doble de lo que valía cuando era nuevo.
+Usurero: Tú lo has dicho. Ahora largo de aquí, BrazoPocho CazaGamusinos.
+
+
+CONVERSACION 2 CON TRADER
+Hugo: Hay un problema con el propulsor, explota mucho más de lo que propulsa.
+Usurero: Me dejas en shock, muchacho. Ojalá pudiera ayudarte, pero no aceptamos devoluciones de productos explotados.
+Hugo: ¿Y qué hago yo ahora? No quiero seguir flotando por ahí a esta velocidad. Anoche soñé que era una burbuja.
+Usurero: Tengo aquí algo que puede mejorar la calidad de tus sueños. Una piedra que emite vibraciones en radiofrecuencias cósmicas.
+Hugo: He gastado todo mi dinero en el propulsor, señor.
+Usurero: Vaya, me diste pena. Si encuentras algo que te guste en la sección de ofertas, te lo regalo.
+Hugo: ¿Te refieres a tu bolsa de basura?
+Usurero: Llámalo como quieras. Ah, y la oferta es válida para una única unidad de basura.

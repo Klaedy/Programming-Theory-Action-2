@@ -1,4 +1,4 @@
-¡Piérdete, motoniño!
+¡Piérdete, MotoNiño!
 Pssst... ¡eh, tú! Niño del brazo pocho, acércate.
 Mi brazo no está pocho
 Has obtenido: Propulsor de Aspiradora.
@@ -8,3 +8,73 @@ Hiciste mucho ruido. Busca un lugar al aire libre y prueba este otro cohete.
 Tal vez pueda usar la azotea de Trino + Caja de loot + Traeme chips
 Trajiste mis chips, aquí tienes un propulsor cuántico, úsalo para pulsar el botón. + caja loot lvl2
 La has cagado chaval. Toma, escapa con esto.
+
+
+
+
+//////////////////PRIMERA CONVERSACION CON DEALER
+Hugo: Mi brazo no está pocho.
+Dealer: Ya. ¿No te has dado cuenta de que el usurero te ha engañado?
+Hugo: ¿Engañado? Si ha sido muy amable, hasta me ha dejado hurgar en su basura.
+Dealer: Él vació los componentes internos valiosos de tu propulsor. Practicamente te lo ha vendido hueco.
+Dealer: Estás cuajado, chaval. La vida te va a comer, espabila.
+Dealer: Puedo ayudarte, pero tienes que dejar de ser un CuentaNubes. ¿Quieres trabajar conmigo?
+Hugo: Necesito dinero para añadirle un propulsor a mi andadera.
+Dealer: Olvida el propulsor, puedo regalarte uno. Tú y yo vamos a hacer grandes cosas juntos.
+*Dealer ha instalado "Propulsor de Secapelos" en Andadera*
+Dealer: Ahora necesito que tú me devuelvas el favor. Verás, el tipo que te engañó no es mala persona...
+Dealer: ...es solo que está enfermo, ¿sabes? Tenemos que curarle y sé cómo vamos a hacerlo.
+Dealer: Pero primero, necesito que vayas a testar uno de los nuevos petardos que me han traído.
+*Has obtenido "Cohete Simple" x1*
+Hugo: No sé yo si...
+Dealer: Ve al taller de Trino a probarlo, seguro que no le importa.
+
+
+//////////////////SEGUNDA CONVERSACION CON DEALER
+Dealer: ¿Tiraste el cohete en el interior del taller? ¡Estás loco!
+Hugo: Dijiste que era un petardo.
+Dealer: Olvida lo que dije. Tengo un nuevo modelo justo aquí, lánzalo desde el tejado del taller.
+*Has obtenido "Cohete Direccional" x1*
+Dealer: He dejado más muestras en el taller, úsalos para derribar todos los radares que veas.
+Hugo: ¿Han hecho algo malo los radares?
+Dealer: Están enfermos también. Han pasado tanto tiempo vigilándonos que han enloquecido.
+Dealer: Además, podemos recolectar sus chips para curar al usurero. Tráeme nueve chips.
+
+
+//////////////////TERCERA CONVERSACION CON DEALER
+*Has entregado "Chip" x9 a Dealer*
+Dealer: Genial, estos chips son todo lo que necesitaba para terminar mi gran invento. ¡El cohete cuántico!
+Dealer: Puede teletransportarse a corta distancia, úsalo para encontrar el acceso oculto al gran botón.
+Hugo: Sigo sin ver la relación entre todo esto y curar al señor que me estafó.
+Dealer: Eso es porque tú no eres médico, bobo BrazoPocho, eres vendedor de quesos.
+Hugo: A decir verdad, no llegué a vender ningún queso. Y mi brazo no está pocho, odio que todos me llamen así.
+Hugo: No es que tenga los brazos muy largos, lo que pasa es que no tengo piernas. ¿Por qué creen que voy en andadera?
+Hugo: Mi padre era muy fan de los cohetes. Todo lo solucionaba con cohetes. Él perdió mis piernas y luego desapareció.
+Dealer: ...
+*Has obtenido "Cohete Cuántico" x1*
+Dealer: Vuelve al tejado de Trino y usa el cohete para buscar y pulsar el gran botón.
+Dealer: Recuerda usar la tecla "Espacio" del control remoto para teletransportarlo. Si necesitas más consejos, ven a verme.
+
+
+
+//////////////////CONSEJOS
+Consejo 1: El cohete cuántico es mucho más pesado que el direccional, olvida ese detalle y perderás el control.
+Consejo 2: Aunque su control no tiene un efecto aparente inmediato, la fuerza que aplicas se acumula.
+Consejo 3: La inclinación del cohete le hace acumular fuerza direccional residual al ascender.
+Consejo 4: Es importante sacar provecho de la teletransprotación. Recuerda: barra espaciadora de tu control remoto.
+Consejo 5: Cuando te teletransportas, el cohete aparece recto, sin inclinación. Usarlo bien puede facilitar su control.
+
+
+
+//////////////////CUARTA CONVERSACION CON DEALER
+Hugo: ¿Qué ha pasado aquí? He escuchado un gran estruendo, ¿hemos curado ya al usurero?
+Dealer: La que has liado, chaval. Has conseguido curarle, pero no creo que la gente lo vaya a entender igual.
+Hugo: Eso es porque no son médicos.
+Dealer: ¿Te gusta el espacio exterior, Hugo?
+Hugo: Es la cosa más absurda que he visto en toda mi vida.
+Dealer: Me lo tomo como un "sí". He construido un último gran invento, solo para ti.
+Dealer: Un invento que te permitirá correr grandes aventuras en galaxias muy lejanas. ¿Qué te parece?
+Hugo: Suena interesante. En esta galaxia no me han ido demasiado bien las cosas.
+Dealer: ¿Aceptas entonces?
+Hugo: Sí... estoy preparado.
+*Dealer te ha instalado "Piernas Propulsadas"*

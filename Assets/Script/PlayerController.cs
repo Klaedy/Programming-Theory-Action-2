@@ -91,7 +91,7 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         cameraStartObject = GameObject.Find("CameraStart");
         canvasIntro = GameObject.Find("CanvasIntro");
-        speed = 10.0f; //CAMBIALO A 5
+        speed = 5.0f; //CAMBIALO A 5
     }
 
     // Update is called once per frame
@@ -230,7 +230,7 @@ public class PlayerController : MonoBehaviour
 
         if (isFirstTimeAzoteaPrivate == 1)
         {
-            Debug.Log("FIRST TIME AZOTEA PRIVATE");
+            //Debug.Log("FIRST TIME AZOTEA PRIVATE");
         }
 
             HangarVisible();
@@ -262,6 +262,7 @@ public class PlayerController : MonoBehaviour
         if (collision.collider.CompareTag("Chip"))
         {
             gameManagerScript.ChipUpdate(1);
+            gameManagerScript.ChipsLeftUpdate(1);
             Destroy(collision.gameObject);
             audioSource.PlayOneShot(chipClip);
         }

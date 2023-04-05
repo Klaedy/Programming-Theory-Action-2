@@ -176,6 +176,7 @@ public class DirectionalRocket : CoheteSimple
             isLaunched = false;
             AudioSource.PlayClipAtPoint(explosionClip, transform.position, 1f);
             MoreRockets();
+            zoomEffectScript.ZoomIn();
             GenerateChips(); //Instancia 3 chips
             Instantiate(explosionPrefab, whereAmI, explosionPrefab.transform.rotation);
             playerControllerScript.bringBackTheControlDude = true;
@@ -195,6 +196,7 @@ public class DirectionalRocket : CoheteSimple
             Instantiate(explosionPrefab, whereAmI, explosionPrefab.transform.rotation);
             playerControllerScript.bringBackTheControlDude = true;
             Destroy(gameObject);
+            zoomEffectScript.ZoomIn();
         }
     }
 
