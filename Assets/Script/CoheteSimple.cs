@@ -35,7 +35,7 @@ public abstract class CoheteSimple : MonoBehaviour
     {
         Rigidbody2D GetRigidbody();
     }
-    public virtual void Lanzamiento()
+    public virtual void Lanzamiento() //INHERITANCE
     {
         //aquí va la funcionalidad
         Vector2 playerPosition = playerControllerScript.GetPlayerPosition();
