@@ -55,6 +55,7 @@ public class DirectionalRocket : CoheteSimple
 
     public override void Lanzamiento()
     {
+        //POLYMORPHISM
         base.Lanzamiento();
         if (!audioSourceDirectionalAssigned)
             AudioSourceAsign();
